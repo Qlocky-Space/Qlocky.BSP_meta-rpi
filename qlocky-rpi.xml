@@ -14,13 +14,12 @@
   
   <remote name="qlocky"      fetch="https://github.com/Qlocky-Space"/>
 
-  <project name="poky" remote="yp" path="sources/poky" revision="02eacd385eca7aa9cf25aaaa61427aa9c126e0bc" upstream="scarthgap"/>
+  <project name="poky" remote="yp" path="sources/poky" revision="02eacd385eca7aa9cf25aaaa61427aa9c126e0bc" upstream="scarthgap">
+      <linkfile dest="setup-environment" src="oe-init-build-env"/>
+  </project>
   <project name="meta-openembedded" remote="oe" path="sources/meta-openembedded" revision="a72010b414ee3d73888ac9cb4e310e8f05e13aea" upstream="scarthgap"/>
   <project name="meta-clang" remote="kraj" path="sources/meta-clang" revision="66414c17ae60e489bef9a97031323e92c247fbe1" upstream="scarthgap"/>
-
-  <project name="fsl-community-bsp-base" remote="community" path="sources/base" revision="84df0b1ff416c6739472f7f7eadff04fa90d38f6" upstream="scarthgap">
-    <linkfile dest="setup-environment" src="setup-environment"/>
-  </project>
+  
   <project name="meta-raspberrypi" remote="yp" path="sources/meta-raspberrypi" revision="6df7e028a2b7b2d8cab0745dc0ed2eebc3742a17" upstream="scarthgap"/>
  
   <project name="meta-arm" remote="yp" path="sources/meta-arm" revision="8aa8a1f17f5b64bc691544f989f04fc83df98adb" upstream="scarthgap"/>
