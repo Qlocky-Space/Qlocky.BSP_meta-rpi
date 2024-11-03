@@ -1,0 +1,5 @@
+# Qlocky BSP Layer for custom iMX8MM based hardware
+This layer provides support for qlocky hardware for use with OpenEmbedded and Yocto Freescale BSP layer.
+
+## Instruction
+See [Wiki](https://qlocky.notion.site/Build-Linux-Distribution-be1a8b71545b4e70a15e45e6f8b95801?pvs=74)
