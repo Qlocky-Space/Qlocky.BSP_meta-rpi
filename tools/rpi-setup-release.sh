@@ -42,7 +42,7 @@ while getopts "k:r:t:b:e:gh" fsl_setup_flag
 do
     case $fsl_setup_flag in
         b) BUILD_DIR="$OPTARG";
-           echo -e "\n Build directory is " $BUILD_DIR
+           echo -e "\nBuild directory is " $BUILD_DIR
            ;;
         h) fsl_setup_help='true';
            ;;
@@ -80,8 +80,20 @@ if [ -z "$MACHINE" ]; then
     MACHINE='raspberrypi-64'
 fi
 
+OEROOT=$PWD/sources/poky
+if [ -e $PWD/sources/oe-core ]; then
+    OEROOT=$PWD/sources/oe-core
+fi
+
+. $OEROOT/oe-init-build-env $CWD/$1 > /dev/null
+
 # run basic setup
-. ./$PROGNAME $BUILD_DIR
+. ./$PROGNAME $BUILD_DIR > /dev/null
+
+# if conf/local.conf not generated, no need to go further
+if [ ! -e conf/local.conf ]; then
+    clean_up && return 1
+fi
 
 # Clean up PATH, because if it includes tokens to current directories somehow,
 # wrong binaries can be used instead of the expected ones during task execution
@@ -141,8 +153,15 @@ hook_in_layer meta-openembedded/meta-networking
 hook_in_layer meta-openembedded/meta-filesystems
 hook_in_layer meta-qt6
 
-echo BSPDIR=$BSPDIR
-echo BUILD_DIR=$BUILD_DIR
+cat <<EOF
+Your build environment has been configured with:
+    MACHINE=$MACHINE
+    DISTRO=$DISTRO
+    SDKMACHINE=$SDKMACHINE
+
+    BSPDIR=$BSPDIR
+    BUILD_DIR=$BUILD_DIR
+EOF
 
 cd  $BUILD_DIR
 clean_up
