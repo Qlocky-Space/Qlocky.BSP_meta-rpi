@@ -1,0 +1,77 @@
+#!/bin/sh
+#
+
+CWD=`pwd`
+
+# get command line options
+OLD_OPTIND=$OPTIND
+unset FSLDISTRO
+
+while getopts "k:r:t:b:e:gh" fsl_setup_flag
+do
+    case $fsl_setup_flag in
+        b) BUILD_DIR="$OPTARG";
+           echo -e "\nBuild directory is " $BUILD_DIR
+           ;;
+        h) fsl_setup_help='true';
+           ;;
+        \?) fsl_setup_error='true';
+           ;;
+    esac
+done
+shift $((OPTIND-1))
+if [ $# -ne 0 ]; then
+    fsl_setup_error=true
+    echo -e "Invalid command line ending: '$@'"
+fi
+OPTIND=$OLD_OPTIND
+if test $fsl_setup_help; then
+    usage && clean_up && return 1
+elif test $fsl_setup_error; then
+    clean_up && return 1
+fi
+
+
+if [ "$(whoami)" = "root" ]; then
+    echo "ERROR: do not use the BSP as root. Exiting..."
+fi
+
+OEROOT=$PWD/sources/poky
+if [ -e $PWD/sources/oe-core ]; then
+    OEROOT=$PWD/sources/oe-core
+fi
+
+. $OEROOT/oe-init-build-env $CWD/$1 > /dev/null
+
+# if conf/local.conf not generated, no need to go further
+if [ ! -e conf/local.conf ]; then
+    clean_up && return 1
+fi
+
+# Clean up PATH, because if it includes tokens to current directories somehow,
+# wrong binaries can be used instead of the expected ones during task execution
+export PATH="`echo $PATH | sed 's/\(:.\|:\)*:/:/g;s/^.\?://;s/:.\?$//'`"
+
+
+cat <<EOF
+
+The Yocto Project has extensive documentation about OE including a
+reference manual which can be found at:
+    http://yoctoproject.org/documentation
+
+For more information about OpenEmbedded see their website:
+    http://www.openembedded.org/
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    meta-toolchain
+    meta-toolchain-sdk
+    adt-installer
+    meta-ide-support
+
+EOF
+
+clean_up
+unset FSLDISTRO

@@ -25,7 +25,7 @@
 
   <project name="Qlocky.BSP_meta-rpi" path="sources/meta-qlocky" remote="qlocky" revision="feature/initial">
     <linkfile dest="rpi-setup-release.sh" src="setup.sh"/>
-    <linkfile dest="setup-environment" src="setup.sh"/>
+    <linkfile dest="setup-environment" src="tools/setup-environment"/>
     <linkfile dest="README" src="README"/>
   </project>
 
