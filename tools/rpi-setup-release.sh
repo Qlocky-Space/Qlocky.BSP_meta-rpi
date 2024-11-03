@@ -80,6 +80,9 @@ if [ -z "$MACHINE" ]; then
     MACHINE='raspberrypi-64'
 fi
 
+# Override the click-through in meta-qlocky
+FSL_EULA_FILE=$CWD/sources/meta-qlocky/README
+
 # Set up the basic yocto environment
 if [ -z "$DISTRO" ]; then
    DISTRO=$FSLDISTRO MACHINE=$MACHINE . ./$PROGNAME $BUILD_DIR
