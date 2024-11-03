@@ -5,7 +5,7 @@
 . sources/meta-qlocky/tools/setup-utils.sh
 
 CWD=`pwd`
-PROGNAME="setup-environment"
+PROGNAME="sources/poky/oe-init-build-env"
 exit_message ()
 {
    echo "To return to this build environment later please run:"
@@ -80,15 +80,12 @@ if [ -z "$MACHINE" ]; then
     MACHINE='raspberrypi-64'
 fi
 
-# Override the click-through in meta-qlocky
-FSL_EULA_FILE=$CWD/sources/meta-qlocky/README
+# run basic setup
+. ./$PROGNAME $BUILD_DIR
 
-# Set up the basic yocto environment
-if [ -z "$DISTRO" ]; then
-   DISTRO=$FSLDISTRO MACHINE=$MACHINE . ./$PROGNAME $BUILD_DIR
-else
-   MACHINE=$MACHINE . ./$PROGNAME $BUILD_DIR
-fi
+# Clean up PATH, because if it includes tokens to current directories somehow,
+# wrong binaries can be used instead of the expected ones during task execution
+export PATH="`echo $PATH | sed 's/\(:.\|:\)*:/:/g;s/^.\?://;s/:.\?$//'`"
 
 # Point to the current directory since the last command changed the directory to $BUILD_DIR
 BUILD_DIR=.
@@ -107,10 +104,19 @@ else
     cp $BUILD_DIR/conf/local.conf.org $BUILD_DIR/conf/local.conf
 fi
 
-echo >> conf/local.conf
-echo "# Switch to Debian packaging and include package-management in the image" >> conf/local.conf
-echo "PACKAGE_CLASSES = \"package_deb\"" >> conf/local.conf
-echo "EXTRA_IMAGE_FEATURES += \"package-management\"" >> conf/local.conf
+# Change settings according environment
+sed -e "s,MACHINE ??=.*,MACHINE ??= '$MACHINE',g" \
+    -e "s,SDKMACHINE ??=.*,SDKMACHINE ??= '$SDKMACHINE',g" \
+    -e "s,DISTRO ?=.*,DISTRO ?= '$DISTRO',g" \
+    -i $BUILD_DIR/conf/local.conf
+
+echo >> $BUILD_DIR/conf/local.conf 
+echo "# Enable UART to ensure it can be used to print logs" >> $BUILD_DIR/conf/local.conf 
+echo "ENABLE_UART = \"1\"" >> $BUILD_DIR/conf/local.conf 
+
+echo >> $BUILD_DIR/conf/local.conf
+echo "# Switch to rpm packaging in the image" >> $BUILD_DIR/conf/local.conf
+echo "PACKAGE_CLASSES = \"package_rpm\"" >> $BUILD_DIR/conf/local.conf
 
 if [ ! -e $BUILD_DIR/conf/bblayers.conf.org ]; then
     cp $BUILD_DIR/conf/bblayers.conf $BUILD_DIR/conf/bblayers.conf.org
@@ -118,19 +124,22 @@ else
     cp $BUILD_DIR/conf/bblayers.conf.org $BUILD_DIR/conf/bblayers.conf
 fi
 
+# Copy template
+cp $CWD/sources/meta-qlocky/tools/bblayers.template $BUILD_DIR/conf/bblayers.conf
 
 echo "" >> $BUILD_DIR/conf/bblayers.conf
 echo "# RPI Yocto Project Release layers" >> $BUILD_DIR/conf/bblayers.conf
 hook_in_layer meta-raspberrypi
 
 echo "" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-arm/meta-arm\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-arm/meta-arm-toolchain\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-clang\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-gnome\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-networking\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-openembedded/meta-filesystems\"" >> $BUILD_DIR/conf/bblayers.conf
-echo "BBLAYERS += \"\${BSPDIR}/sources/meta-qt6\"" >> $BUILD_DIR/conf/bblayers.conf
+hook_in_layer meta-arm/meta-arm
+hook_in_layer meta-arm/meta-arm-toolchain
+hook_in_layer meta-clang
+hook_in_layer meta-openembedded/meta-oe
+hook_in_layer meta-openembedded/meta-python
+hook_in_layer meta-openembedded/meta-networking
+hook_in_layer meta-openembedded/meta-filesystems
+hook_in_layer meta-qt6
 
 echo BSPDIR=$BSPDIR
 echo BUILD_DIR=$BUILD_DIR
