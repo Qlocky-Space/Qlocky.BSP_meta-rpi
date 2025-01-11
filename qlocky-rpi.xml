@@ -21,7 +21,7 @@
   <project name="meta-raspberrypi" remote="yp" path="sources/meta-raspberrypi" revision="6df7e028a2b7b2d8cab0745dc0ed2eebc3742a17" upstream="scarthgap"/>
  
   <project name="meta-arm" remote="yp" path="sources/meta-arm" revision="8aa8a1f17f5b64bc691544f989f04fc83df98adb" upstream="scarthgap"/>
-  <project name="meta-qt6" remote="qt" path="sources/meta-qt6" revision="dc13e1bfda4a4757a08c2d6673bc4bac012c4a80" upstream="6.7.0" />
+  <project name="meta-qt6" remote="qt" path="sources/meta-qt6" revision="f4ef1331f0cc49bd4aa1e1aace6dc7f000b9651e" upstream="6.8.1" />
 
   <project name="Qlocky.BSP_meta-rpi" path="sources/meta-qlocky" remote="qlocky" revision="feature/initial">
     <linkfile dest="rpi-setup-release.sh" src="setup.sh"/>
