@@ -1,37 +1,35 @@
-SUMMARY = "Qlocky production image"
+# Pulled from a mix of different images:
+include recipes-core/images/core-image-minimal.bb 
 
-inherit core-image
 
-# https://docs.yoctoproject.org/ref-manual/features.html#image-features
-IMAGE_FEATURES += " \
-    debug-tweaks \
-    tools-profile \
-    tools-sdk \
-    package-management \
-    splash \
-    nfs-client \
-    tools-debug \
-    ssh-server-openssh \
-    hwcodecs \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'weston','', d)} \
+SUMMARY = "The minimal image that can run Qt6 applications"
+LICENSE = "MIT"
+
+MY_TOOLS = " \
+    qtbase \
+    qtbase-dev \
+    qtbase-plugins \
+    qtbase-tools \
 "
 
-SDKIMAGE_FEATURES:append = " \
-    staticdev-pkgs \
+MY_PKGS = " \
+    qtmultimedia \
+    qtdeclarative \
 "
 
-IMAGE_INSTALL += " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'x11 wayland', 'weston-xwayland xterm', '', d)} \
-    imx-test \
-    firmwared \
-    packagegroup-imx-core-tools \
-    packagegroup-imx-security \
-    curl \
-    ${CLINFO} \
+MY_FEATURES = " \
+    bluez5 \
+    i2c-tools \
+    bridge-utils \
+    hostapd \
+    iptables \
+    wpa-supplicant \
 "
 
-CLINFO              ?= ""
-CLINFO:imxgpu        = "clinfo"
-CLINFO:mx8mm-nxp-bsp = ""
-
-export IMAGE_BASENAME = "qlocky-image-core"
+DISTRO_FEATURES += " efi bluez5 bluetooth wifi"
+IMAGE_INSTALL = " \
+    ${MY_TOOLS} \
+    ${MY_PKGS} \
+    ${MY_FEATURES} \
+    qlockyapp \
+"
