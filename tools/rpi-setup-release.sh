@@ -73,7 +73,6 @@ modify_layer_conf() {
     echo "" >> $BUILD_DIR/conf/bblayers.conf
     hook_in_layer meta-arm/meta-arm
     hook_in_layer meta-arm/meta-arm-toolchain
-    hook_in_layer meta-clang
     hook_in_layer meta-openembedded/meta-oe
     hook_in_layer meta-openembedded/meta-python
     hook_in_layer meta-openembedded/meta-networking
