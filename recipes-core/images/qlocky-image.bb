@@ -1,5 +1,5 @@
 # Pulled from a mix of different images:
-include recipes-core/images/core-image-minimal.bb 
+inherit core-image
 
 
 # TODO Rotate screen
@@ -19,11 +19,13 @@ MY_TOOLS = " \
     qtbase-dev \
     qtbase-plugins \
     qtbase-tools \
+    qtwayland \
+    qt6-env \
 "
 
 MY_PKGS = " \
     qtmultimedia \
-    qtdeclarative
+    qtdeclarative \
 "
 
 FONTS = "\
@@ -49,14 +51,25 @@ MY_FEATURES = " \
     packagegroup-core-boot \
     kernel-modules \
     openssh \
+    weston \
+    weston-init \
+    wayland \
+    wayland-protocols \
 "
 
-DISTRO_FEATURES:append = " efi bluez5 bluetooth wifi"
+DISTRO_FEATURES:append = " splash package-management efi bluez5 bluetooth wifi weston systemd wayland"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "kernel-module-brcmfmac"
 
+SYSTEMD_AUTO_ENABLE:append = " weston"
+CORE_IMAGE_EXTRA_INSTALL += "wayland weston"
 
-IMAGE_INSTALL = " \
+CORE_IMAGE_BASE_INSTALL += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'weston-xwayland matchbox-terminal', '', d)}"
+
+QB_MEM = "-m 512"
+
+
+IMAGE_INSTALL:append = " \
     ${FONTS} \
     ${MY_TOOLS} \
     ${DEV_TOOLS} \
