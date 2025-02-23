@@ -1,0 +1,2 @@
+DISTRO_FEATURES:remove = "x11"
+PACKAGECONFIG:remove = "x11"
