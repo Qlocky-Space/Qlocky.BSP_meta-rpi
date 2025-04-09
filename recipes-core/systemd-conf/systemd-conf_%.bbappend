@@ -15,3 +15,10 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/eth.network ${D}${sysconfdir}/systemd/network
     install -m 0644 ${WORKDIR}/wlan.network ${D}${sysconfdir}/systemd/network
 }
+
+ROOTFS_POSTPROCESS_COMMAND += "enable_weston_service;"
+
+enable_weston_service() {
+    # Enable the weston service
+    systemctl enable weston.service
+}

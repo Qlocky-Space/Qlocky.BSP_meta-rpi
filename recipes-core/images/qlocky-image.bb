@@ -1,5 +1,4 @@
 inherit core-image
-inherit populate_sdk_qt6
 
 SUMMARY = "The minimal image that can run Qt6 applications"
 LICENSE = "MIT"
@@ -12,8 +11,10 @@ MY_TOOLS = " \
 QT_TOOLS = " \
     packagegroup-qt6-modules \
     qtbase-dev \
+    qttools \
     qtbase-plugins \
-    qt6-env \
+    boost \
+    boost-staticdev \
 "
 
 BSP_FEATURES = " \
@@ -40,10 +41,10 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "kernel-module-brcmfmac"
 # https://docs.yoctoproject.org/3.2/ref-manual/ref-features.html#image-features
 IMAGE_FEATURES:append = " hwcodecs"
 
-DISTRO_FEATURES:append = " alsa wifi"
+DISTRO_FEATURES:append = " alsa wifi gles2 qt6"
 
 # QT configuration
-PACKAGECONFIG:append:pn-qtbase = " declarative accessibility fontconfig gui png zlib libinput jpge"
+PACKAGECONFIG:append:pn-qtbase = " declarative accessibility fontconfigq q libs gl zlib gui eglfs gles2 png zlib libinput jpge"
 IMAGE_INSTALL:remove = " qt3d qtquick3d"
 TOOLCHAIN_TARGET_TASK:remove = " qt3d qtquick3d"
 
