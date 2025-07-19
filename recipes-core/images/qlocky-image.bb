@@ -12,6 +12,7 @@ QT_TOOLS = " \
     packagegroup-qt6-modules \
     qtbase-dev \
     qttools \
+    qttools-tools \
     qtbase-plugins \
     boost \
     boost-staticdev \
@@ -27,6 +28,8 @@ BSP_FEATURES = " \
     packagegroup-core-boot \
     kernel-modules \
     openssh \
+    rocksdb \
+    glibc-dev \
 "
 
 CORE_IMAGE_EXTRA_INSTALL:append = "\
@@ -44,9 +47,12 @@ IMAGE_FEATURES:append = " hwcodecs"
 DISTRO_FEATURES:append = " alsa wifi gles2 qt6"
 
 # QT configuration
-PACKAGECONFIG:append:pn-qtbase = " declarative accessibility fontconfigq q libs gl zlib gui eglfs gles2 png zlib libinput jpge"
+PACKAGECONFIG:append:pn-qtbase = " declarative qttools qttools-native qttranslations accessibility fontconfigq q libs gl zlib gui eglfs gles2 png zlib libinput jpge"
 IMAGE_INSTALL:remove = " qt3d qtquick3d"
 TOOLCHAIN_TARGET_TASK:remove = " qt3d qtquick3d"
+
+RDEPENDS += " weston-init"
+
 
 IMAGE_INSTALL:append = " \
     ${MY_TOOLS} \
@@ -55,5 +61,8 @@ IMAGE_INSTALL:append = " \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     qlockyapp \
 "
+# ROOTFS_POSTPROCESS_COMMAND += "enable_ssh_service;"
 
-
+# enable_ssh_service() {
+#     ln -s /lib/systemd/system/sshd.service ${D}${sysconfdir}/systemd/system/multi-user.target.wants/sshd.service
+# }

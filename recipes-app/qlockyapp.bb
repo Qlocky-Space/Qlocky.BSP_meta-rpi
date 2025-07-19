@@ -7,8 +7,6 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 inherit qt6-cmake
 EXTRA_OECMAKE += " \
     -DCMAKE_TARGET_SDK=Qlocky \
-    -DCMAKE_FIND_ROOT_PATH=${STAGING_DIR_TARGET} \
-    -DCMAKE_TOOLCHAIN_FILE=${RECIPE_SYSROOT_NATIVE}/usr/share/cmake/OEToolchainConfig.cmake \
     -DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
 "
 
@@ -21,4 +19,8 @@ SRCREV = "${AUTOREV}"
 PV = "1.0.0"
 S = "${WORKDIR}/git"
 
-DEPENDS += "qtbase qtdeclarative qtdeclarative-native"
+FILES_${PN} += "/usr/share/qlocky-0.0.1"
+
+DEPENDS += "rocksdb"
+DEPENDS += "qtbase qttools qttools-native qtdeclarative qtdeclarative-native qttranslations qtshadertools qtlanguageserver"
+
