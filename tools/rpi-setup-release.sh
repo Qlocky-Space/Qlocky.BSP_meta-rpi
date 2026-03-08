@@ -77,6 +77,7 @@ modify_layer_conf() {
     hook_in_layer meta-openembedded/meta-python
     hook_in_layer meta-openembedded/meta-networking
     hook_in_layer meta-openembedded/meta-filesystems
+    hook_in_layer meta-openembedded/meta-multimedia
     hook_in_layer meta-qt6
 }
 

@@ -15,6 +15,9 @@ do_deploy:append() {
     echo "overscan_top=0" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt
     echo "overscan_bottom=0" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt
 
+    echo "# Qlocky audio on PCM/I2S GPIO header (external TAS5805M path)" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt
+    echo "dtoverlay=qlocky-tas5805m,addr=0x2d,pdn_pin=27" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt
+
     # echo "hdmi_edid_file=1" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt
     # echo "hdmi_edid_filename=edid.dat" >> ${DEPLOYDIR}/${BOOTFILES_DIR_NAME}/config.txt    
 }

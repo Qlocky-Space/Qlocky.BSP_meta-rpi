@@ -1,0 +1,79 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    /* Enable the BCM2835 I2S interface (clock producer = master) */
+    fragment@0 {
+        target = <&i2s_clk_producer>;
+        __overlay__ {
+            status = "okay";
+        };
+    };
+
+    /* Fixed regulator for TAS5805M PVDD supply */
+    fragment@1 {
+        target-path = "/";
+        __overlay__ {
+            tas5805m_pvdd: tas5805m-pvdd-reg {
+                compatible = "regulator-fixed";
+                regulator-name = "tas5805m-pvdd";
+                regulator-min-microvolt = <5000000>;
+                regulator-max-microvolt = <5000000>;
+                regulator-always-on;
+            };
+        };
+    };
+
+    /* Register TAS5805M on I2C1 bus */
+    fragment@2 {
+        target = <&i2c1>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            status = "okay";
+
+            tas5805m: amp@2c {
+                #sound-dai-cells = <0>;
+                compatible = "ti,tas5805m";
+                reg = <0x2c>;
+                pvdd-supply = <&tas5805m_pvdd>;
+                pdn-gpios = <&gpio 27 0>;
+                status = "okay";
+            };
+        };
+    };
+
+    /* Configure simple-audio-card sound card.
+     * BCM2835 I2S is the bit-clock and frame-sync master (clock producer).
+     * TAS5805M is the I2S slave.
+     * 2 TDM slots, 32 bits wide → BCLK = sample_rate * 2 * 32.
+     */
+    fragment@3 {
+        target = <&sound>;
+        __overlay__ {
+            compatible = "simple-audio-card";
+            simple-audio-card,name = "Qlocky-TAS5805M";
+            simple-audio-card,format = "i2s";
+            simple-audio-card,bitclock-master = <&snd_cpu>;
+            simple-audio-card,frame-master = <&snd_cpu>;
+            status = "okay";
+
+            snd_cpu: simple-audio-card,cpu {
+                sound-dai = <&i2s_clk_producer>;
+                dai-tdm-slot-num = <2>;
+                dai-tdm-slot-width = <32>;
+            };
+
+            snd_codec: simple-audio-card,codec {
+                sound-dai = <&tas5805m>;
+            };
+        };
+    };
+
+    __overrides__ {
+        addr    = <&tas5805m>,"reg:0";
+        pdn_pin = <&tas5805m>,"pdn-gpios:4";
+    };
+};
