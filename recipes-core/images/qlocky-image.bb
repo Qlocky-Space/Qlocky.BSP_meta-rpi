@@ -9,9 +9,9 @@ LICENSE = "MIT"
 MY_TOOLS = " \
     gdb \
     gdbserver \
-    gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad  gstreamer1.0-libav \
 "
-
+# gstreamer1.0-libav would also provide the AAC codec, but it is a commercial marked package
 
 
 QT_TOOLS = " \
@@ -36,6 +36,9 @@ BSP_FEATURES = " \
     openssh \
     rocksdb \
     alsa-utils \
+    alsa-lib \
+    alsa-lib-dev \
+    alsa-state \
     sdbus-c++ \
     sdbus-c++-tools \
     glibc-dev \
@@ -63,6 +66,7 @@ PACKAGECONFIG:append:pn-qtbase = " declarative qttools qttools-native qttranslat
 # PACKAGECONFIG:append:pn-pulseaudio = " tcpwrap zeroconf"
 IMAGE_INSTALL:remove = " qt3d qtquick3d"
 TOOLCHAIN_TARGET_TASK:remove = " qt3d qtquick3d"
+TOOLCHAIN_TARGET_TASK:append = " alsa-lib-dev"
 
 RDEPENDS += " weston-init"
 
