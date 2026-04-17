@@ -1,0 +1,5 @@
+[D-BUS Service]
+Name=ch.qlocky.DisplayPower
+Exec=/bin/false
+User=weston
+SystemdService=weston.service

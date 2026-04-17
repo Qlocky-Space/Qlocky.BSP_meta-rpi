@@ -6,4 +6,5 @@ PACKAGECONFIG:remove = "x11"
 
 # Override the weston.service to run as root for DRM/KMS access on Raspberry Pi.
 # This replaces the upstream weston-autologin/PAM approach with a simpler root-based kiosk setup.
-# SRC_URI:append = " file://weston.service"
+SRC_URI:append = " file://weston.service"
+

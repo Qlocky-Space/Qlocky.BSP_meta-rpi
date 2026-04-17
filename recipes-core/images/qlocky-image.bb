@@ -79,6 +79,7 @@ IMAGE_INSTALL:append = " \
     ${QT_TOOLS} \
     ${BSP_FEATURES} \
     ${CORE_IMAGE_EXTRA_INSTALL} \
+    qlocky-display-power-service \
     qlocky-audio-init \
     qlocky-tas5805m-firmware \
     qlockyapp \

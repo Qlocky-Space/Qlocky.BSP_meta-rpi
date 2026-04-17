@@ -23,4 +23,5 @@ FILES_${PN} += "/usr/share/qlocky-0.0.1"
 
 DEPENDS += "rocksdb sdbus-c++"
 DEPENDS += "qtbase qttools qttools-native qtdeclarative sdbus-c++-tools-native qtdeclarative-native qttranslations qtshadertools qtlanguageserver qtvirtualkeyboard"
+DEPENDS += "qtmultimedia"
 
