@@ -79,13 +79,9 @@ IMAGE_INSTALL:append = " \
     ${QT_TOOLS} \
     ${BSP_FEATURES} \
     ${CORE_IMAGE_EXTRA_INSTALL} \
+    qlocky-timesyncd \
     qlocky-display-power-service \
     qlocky-audio-init \
     qlocky-tas5805m-firmware \
     qlockyapp \
 "
-
-
-#TODO
-# At the moment, /etc/wpa_supplicant/wpa_supplicant.conf needs to modified manually
-# --> ExecStart=/usr/sbin/wpa_supplicant -u -i wlan0 -c /etc/wpa_supplicant.conf
